@@ -1,0 +1,5 @@
+{"data":{"name":"foo","bar":"42"},"timeout":{"$$date":1419783944244},"id":"0.14288366003893316-0.6455049691721797-0.06762233795598149","interval":60000,"_id":"byfUzEn0uXof9fRf"}
+{"data":{"foo":"bar"},"timeout":{"$$date":1419783944245},"id":"0.6485111345537007-0.8355474306736141-0.8491183468140662","interval":60000,"_id":"HyJw997B9v9ZpPgb"}
+{"data":{"foo":"bar"},"timeout":{"$$date":1419783945246},"id":"0.6485111345537007-0.8355474306736141-0.8491183468140662","interval":60000,"_id":"HyJw997B9v9ZpPgb"}
+{"$$deleted":true,"_id":"HyJw997B9v9ZpPgb"}
+{"$$deleted":true,"_id":"byfUzEn0uXof9fRf"}

@@ -1,0 +1,5 @@
+{
+  "port": "31042",
+  "backend": "/admin",
+  "appTitle": "hades CMS"
+}

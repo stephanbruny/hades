@@ -1,0 +1,26 @@
+{
+  "name": "hades-cms",
+  "version": "0.0.1",
+  "description": "Node.js based CMS using MongoDB - so nothing unique",
+  "author": "Stephan Bruny <stephan.bruny@live.de>",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stephanbruny/hades.git"
+  },
+  "keywords": [
+    "CMS",
+    "node",
+    "mongodb"
+  ],
+  "dependencies": {
+    "async": "~0.8.0",
+    "express": "4.2.x",
+    "hogan.js": "3.0.x",
+    "nedb": "^1.0.1"
+  },
+  "license": "MIT"
+}

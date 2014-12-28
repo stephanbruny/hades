@@ -1,4 +1,4 @@
 hades
 =====
 
-Flexible CMS based on Node.js and MongoDB
+Flexible CMS based on Node.js and NeDB

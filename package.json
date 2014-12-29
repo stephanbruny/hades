@@ -18,6 +18,7 @@
   ],
   "dependencies": {
     "async": "~0.8.0",
+    "body-parser": "^1.10.0",
     "express": "4.2.x",
     "hogan.js": "3.0.x",
     "nedb": "^1.0.1"

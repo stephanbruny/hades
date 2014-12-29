@@ -2,7 +2,7 @@ var assert = require("assert")
 var nedb = require('nedb');
 var session = require('../lib/session');
 
-var dataStore = new nedb({filename: './test-session.db', autoload: true});
+var dataStore = new nedb({filename: './test-session.db', autoload: true, inMemoryOnly: true});
 
 var timeout = 60000;
 
@@ -52,8 +52,6 @@ describe('Session', function() {
             assert.equal(1, result);
             assert.equal(null, err);
             session.get(sess._id, function(err, data) {
-              console.log("OLD: " + oldTime);
-              console.log("NEW: " + data.timeout)
               assert.equal(null, err);
               assert.equal(true, new Date() < sess.timeout);
               done();
@@ -61,6 +59,27 @@ describe('Session', function() {
           })
         }, 1000);
       })
+    })
+  });
+
+  describe('clear()', function() {
+    it ('removes outdated sessions from the database', function(done) {
+      dataStore.insert({
+        data: {foo: 'bar', removeme: true},
+        name: 'test',
+        timeout: new Date("October 13, 2014 11:13:00")
+      }, function(err, newSess) {
+        assert.equal(null, err);
+        assert.equal('test', newSess.name);
+        session.clear(function(err) {
+          assert.equal(null, err);
+          dataStore.findOne({name: 'test'}, function(err, data) {
+            assert.equal(null, err);
+            assert.equal(null, data);
+            done();
+          })
+        })
+      });
     })
   });
 

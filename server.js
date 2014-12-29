@@ -6,6 +6,8 @@ var async = require('async');
 var nedb = require('nedb');
 
 var pageLib = require('./lib/page');
+var session = require('./lib/session')
+var userLib = require('./lib/user');
 
 var app = express();
 
@@ -19,10 +21,26 @@ function createDatabase(name) {
   return new nedb({filename: './db/' + name + '.db', autoload: true});
 }
 
+function installDefaultAdmin(callback) {
+  userLib.count(function(err, cnt) {
+    if (cnt > 0) {
+      return callback();
+    }
+    var password = guid();
+    var username = "admin";
+    console.log("Default administrator created. Use " + username + " with password: " + password + ' to login.');
+    console.log("Security information: Change default password after first login.");
+    userLib.create(username, password, ['*'], callback);
+  });
+}
+
 function initialize() {
   site = createDatabase('site');
   subSystems = [];
   subSystems.push(function(cb) { pageLib.initialize(createDatabase('pages')); cb(); });
+  subSystems.push(function(cb) { session.initialize(createDatabase('sessions')); cb(); });
+  subSystems.push(function(cb) { userLib.initialize(createDatabase('users')); cb(); });
+  subSystems.push(function(cb) { installDefaultAdmin(cb) });
   async.series(subSystems, function(err) {
     if (err) {
       return console.error(err);
@@ -31,14 +49,44 @@ function initialize() {
   })
 }
 
-app.get(config.backend, function(req, res){
-  require('fs').readFile('./views/index.html', 'utf8', function(err, data) {
+function renderHtml(view, context, callback) {
+  require('fs').readFile('./views/' + view, 'utf8', function(err, data) {
     if (err) {
-      return res.send(500);
+      return callback(err);
     }
-    var template = hogan.compile(data);
-    return res.send(template.render(merge(app.locals, res.locals)))
+    try {
+      var template = hogan.compile(data);
+      return callback(null, template.render(context));
+    } catch (ex) {
+      return callback(ex);
+    }
   });
+}
+
+app.get(config.backend, function(req, res){
+  var context = merge(app.locals, res.locals);
+  if (req.session && req.session.admin) {
+    context.content = "<h2>Hello Admin!</h2>";
+    renderHtml('index.html', context, function(err, html) {
+      if (err) {
+        return res.send(500, err.message);
+      }
+      res.send(html);
+    });
+  } else {
+    renderHtml('login.html', context, function(err, loginHtml) {
+      if (err) {
+        return res.send(500, err.message);
+      }
+      context.content = loginHtml;
+      renderHtml('index.html', context, function(err, html) {
+        if (err) {
+          return res.send(500, err.message);
+        }
+        return res.send(html);
+      })
+    });
+  }
 });
 
 app.get('/:page', function(req, res) {

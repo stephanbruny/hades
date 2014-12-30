@@ -9,7 +9,8 @@ var bodyParser = require('body-parser');
 var pageLib = require('./lib/page');
 var session = require('./lib/session')
 var userLib = require('./lib/user');
-var router  = require('./lib/router')
+var router  = require('./lib/router');
+var models  = require('./lib/models')
 var backend = require('./backend')
 
 var app = express();
@@ -54,13 +55,17 @@ function installDefaultAdmin(callback) {
 function addDefaultRoutes(app) {
   app.get(config.backend, function(req, res){
     var context = merge(app.locals, res.locals);
+    context.css = [];
     if (req.session && req.session.data && req.session.data.rights.indexOf('*') != -1) {
-      context.content = "<h2>Hello Admin!</h2>";
-      renderHtml('index.html', context, function(err, html) {
-        if (err) {
-          return res.send(500, err.message);
-        }
-        res.send(html);
+      renderHtml('dashboard.html', context, function(err, dashboard) {
+        context.css.push('/css/dashboard.css');
+        context.content = dashboard;
+        renderHtml('index.html', context, function(err, html) {
+          if (err) {
+            return res.send(500, err.message);
+          }
+          res.send(html);
+        });
       });
     } else {
       renderHtml('login.html', context, function(err, loginHtml) {
@@ -124,6 +129,7 @@ function initialize() {
   subSystems.push(function(cb) { pageLib.initialize(createDatabase('pages')); cb(); });
   subSystems.push(function(cb) { userLib.initialize(createDatabase('users')); cb(); });
   subSystems.push(function(cb) { router.initialize(createDatabase('routes')); cb(); });
+  subSystems.push(function(cb) { models.initialize(config.modelsDirectory); cb(); });
   subSystems.push(function(cb) { installDefaultAdmin(cb) });
   subSystems.push(function(cb) { backend.initialize(config.backend, app); cb() });
   subSystems.push(function(cb) { addDefaultRoutes(app); cb() });

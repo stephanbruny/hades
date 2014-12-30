@@ -1,0 +1,25 @@
+<div class="row">
+  <h2>Pages</h2>
+  <div class="col-xs-12">
+    <div class="form-wrap">
+      <h3>New Page</h3>
+      <form action="{{backendNewPageUrl}}" method="post">
+        <div class="form-group">
+          <label for="id" class="sr-only">Page-ID</label>
+          <input type="text" id="id" name="id" placeholder="page-id" class="form-control" />
+        </div>
+        
+        <div class="form-group">
+          <label for="title" class="sr-only">Page Title</label>
+          <input type="text" id="title" name="title" placeholder="New Page" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label for="content" class="sr-only">Content</label>
+          <textarea id="content" name="content" class="form-control language-markup" rows="10"></textarea>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

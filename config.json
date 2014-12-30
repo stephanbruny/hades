@@ -1,5 +1,6 @@
 {
   "port": "31042",
   "backend": "/admin",
-  "appTitle": "hades CMS"
+  "appTitle": "hades CMS",
+  "modelsDirectory": "./db/models"
 }

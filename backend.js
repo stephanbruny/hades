@@ -10,6 +10,7 @@ exports.initialize = function(backendRootUrl, app) {
   app.locals.backendLogoutUrl = backendRootUrl + '/logout';
   app.locals.backendPagesUrl = backendRootUrl + '/pages';
   app.locals.backendUsersUrl = backendRootUrl + '/users';
+  app.locals.backendModelsUrl = backendRootUrl + '/models/:action?';
 
   function renderHtml(view, context, callback) {
     require('fs').readFile('./views/' + view, 'utf8', function(err, data) {
@@ -104,5 +105,9 @@ exports.initialize = function(backendRootUrl, app) {
       getBackendView('users.html', req, res, null, null, showView(res))
     });
   });
+
+  app.get(app.locals.backendModelsUrl, function(req, res) {
+    getBackendView('new-model.html', req, res, null, null, showView(res));
+  })
 
 }

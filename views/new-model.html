@@ -1,0 +1,91 @@
+<div class="row">
+  <h2>Models</h2>
+  <div class="col-xs-12">
+    <div class="form-wrap">
+      <h3>New Model</h3>
+      <form action="{{backendNewPageUrl}}" method="post">
+        <div class="form-group">
+          <label for="id" class="sr-only">Model-ID</label>
+          <input type="text" id="id" name="id" placeholder="Model ID / Model name" class="form-control" />
+        </div>
+        
+        <div class="form-group">
+          <table id="data-map" class="table">
+            <thead>
+              <tr>
+                <th>Data Key</th>
+                <th>Data Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="text" /></td>
+                <td>
+                  <select>
+                    <option>String</option>
+                    <option>Number</option>
+                    <option>Date</option>
+                    <option>Object</option>
+                    <option>Array</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><button id="add-data" type="button" class="btn">Add</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary" type="button" onclick="createModel()">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+var tableElement = [ 
+'<tr>',
+'<td><input type="text" /></td>',
+'<td>',
+'  <select>',
+'    <option>String</option>',
+'    <option>Number</option>',
+'    <option>Date</option>',
+'    <option>Object</option>',
+'    <option>Array</option>',
+'  </select>',
+'</td>',
+'</tr>']
+$('#add-data').click(function(e) {
+  $('table#data-map tbody').prepend(tableElement.join("\n"));
+});
+
+function createModelData() {
+  var result = {};
+  var key;
+  $('table#data-map tbody tr td').each(function(index, x) {
+    var v = $(x).find('input').val();
+    if (v) {
+      key = v;
+    } else {
+      v = $($(x).find('select option:selected')).text();
+      if (v) {
+        result[key] = v;
+      }
+    }
+  });
+  return result;
+}
+
+function createModel() {
+  var result = {}
+  result.name = $('input#id').val();
+  result.fields = createModelData();
+  console.log(result);
+  return result;
+}
+
+</script>
